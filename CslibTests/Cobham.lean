@@ -10,7 +10,7 @@ import Mathlib.Data.Fin.VecNotation
 /-! # Cobham's function algebra tests
 
 These tests evaluate a few terms of Cobham's algebra, over the binary alphabet and a
-three-symbol alphabet, and check membership of some simple unary functions in `CobhamFP`,
+three-symbol alphabet, and check membership of some simple unary functions in `cobhamFP`,
 including one built by limited recursion on notation.
 -/
 
@@ -36,12 +36,12 @@ example : (smash (2 : Fin 3)).eval ![[0, 1], [0, 0, 0]] = List.replicate 6 2 := 
 
 /-! ## Membership in the unary class -/
 
-example : (fun x => x) ∈ CobhamFP Bool := ⟨proj 0, trivial, fun _ => rfl⟩
+example : (fun x => x) ∈ cobhamFP Bool := ⟨proj 0, trivial, fun _ => rfl⟩
 
-example : (fun x => true :: false :: x) ∈ CobhamFP Bool :=
+example : (fun x => true :: false :: x) ∈ cobhamFP Bool :=
   ⟨comp (cons true) fun _ => cons false, by simp, fun _ => rfl⟩
 
-example : (fun x : List (Fin 3) => List.replicate (x.length * x.length) 0) ∈ CobhamFP (Fin 3) :=
+example : (fun x : List (Fin 3) => List.replicate (x.length * x.length) 0) ∈ cobhamFP (Fin 3) :=
   ⟨comp (smash 0) fun _ => proj 0, by simp, fun _ => rfl⟩
 
 /-- The recursion in `unaryLength` computes the unary length, for any parameter vector. -/
@@ -54,7 +54,7 @@ private theorem unaryLength_rec (v : Fin 0 → List Bool) (x : List Bool) :
 
 /-- Unary length is in the class: its bound `x ↦ true :: x` is a limited term, and the
 recursion is length-bounded by it. -/
-example : (fun x : List Bool => List.replicate x.length true) ∈ CobhamFP Bool := by
+example : (fun x : List Bool => List.replicate x.length true) ∈ cobhamFP Bool := by
   refine ⟨unaryLength, ?_, fun x => ?_⟩
   · simp only [unaryLength, limited_boundedRec, limited_empty, limited_comp, limited_cons,
       limited_proj, implies_true, true_and]

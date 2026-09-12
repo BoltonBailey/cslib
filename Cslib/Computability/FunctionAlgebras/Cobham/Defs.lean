@@ -24,7 +24,7 @@ with semantics given by `Cobham.eval`.
 Cobham's side condition on recursion — that the recursively defined
 function be length-bounded by another function of the class — is not part of the syntax:
 it is the structural predicate `Cobham.Limited`,
-and `CobhamFP` collects the unary functions denoted by limited terms.
+and `cobhamFP` collects the unary functions denoted by limited terms.
 
 The functions are multi-arity (indexed by `Fin n` argument vectors) because limited
 recursion on notation inherently produces functions of higher arity.
@@ -46,10 +46,6 @@ defined function must be length-bounded by another function of the class
 (rather than by an external polynomial).
 Together with `smash` and the successors this realizes exactly the polynomial length bounds,
 which is what makes the class no larger than the polynomial-time computable functions.
-
-## TODO
-
-* Prove the limited Cobham functions are exactly the polynomial-time computable functions.
 
 ## References
 
