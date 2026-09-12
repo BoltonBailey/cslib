@@ -4,14 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bolton Bailey
 -/
 
-import Cslib.Computability.FunctionAlgebras.Cobham.PolyTime
+import Cslib.Computability.FunctionAlgebras.Cobham.Defs
 import Mathlib.Data.Fin.VecNotation
 
 /-! # Cobham's function algebra tests
 
 These tests evaluate a few terms of Cobham's algebra, over the binary alphabet and a
-three-symbol alphabet, and check membership of some simple unary functions in `cobhamFP`,
-including one built by limited recursion on notation.
+three-symbol alphabet, and check that some simple unary functions are denoted by limited
+terms, including one built by limited recursion on notation.
 -/
 
 namespace CslibTests.Cobham
@@ -34,14 +34,16 @@ example : (comp (cons true) fun _ => cons false).eval ![[true]] = [true, false, 
 
 example : (smash (2 : Fin 3)).eval ![[0, 1], [0, 0, 0]] = List.replicate 6 2 := by decide
 
-/-! ## Membership in the unary class -/
+/-! ## Functions denoted by limited unary terms -/
 
-example : (fun x => x) ∈ cobhamFP Bool := ⟨proj 0, trivial, fun _ => rfl⟩
+example : ∃ c : Cobham Bool 1, c.Limited ∧ ∀ x, c.eval (fun _ => x) = x :=
+  ⟨proj 0, trivial, fun _ => rfl⟩
 
-example : (fun x => true :: false :: x) ∈ cobhamFP Bool :=
+example : ∃ c : Cobham Bool 1, c.Limited ∧ ∀ x, c.eval (fun _ => x) = true :: false :: x :=
   ⟨comp (cons true) fun _ => cons false, by simp, fun _ => rfl⟩
 
-example : (fun x : List (Fin 3) => List.replicate (x.length * x.length) 0) ∈ cobhamFP (Fin 3) :=
+example : ∃ c : Cobham (Fin 3) 1, c.Limited ∧
+    ∀ x, c.eval (fun _ => x) = List.replicate (x.length * x.length) 0 :=
   ⟨comp (smash 0) fun _ => proj 0, by simp, fun _ => rfl⟩
 
 /-- The recursion in `unaryLength` computes the unary length, for any parameter vector. -/
@@ -52,9 +54,10 @@ private theorem unaryLength_rec (v : Fin 0 → List Bool) (x : List Bool) :
   | nil => rfl
   | cons b x ih => simp [ih, List.replicate_succ]
 
-/-- Unary length is in the class: its bound `x ↦ true :: x` is a limited term, and the
-recursion is length-bounded by it. -/
-example : (fun x : List Bool => List.replicate x.length true) ∈ cobhamFP Bool := by
+/-- Unary length is denoted by a limited term: its bound `x ↦ true :: x` is a limited term,
+and the recursion is length-bounded by it. -/
+example : ∃ c : Cobham Bool 1, c.Limited ∧
+    ∀ x, c.eval (fun _ => x) = List.replicate x.length true := by
   refine ⟨unaryLength, ?_, fun x => ?_⟩
   · simp only [unaryLength, limited_boundedRec, limited_empty, limited_comp, limited_cons,
       limited_proj, implies_true, true_and]

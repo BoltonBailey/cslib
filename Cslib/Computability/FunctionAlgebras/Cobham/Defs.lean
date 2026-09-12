@@ -7,6 +7,7 @@ module
 
 public import Cslib.Init
 public import Mathlib.Data.Fin.Tuple.Basic
+import Cslib.Computability.Machines.Turing.SingleTape.Deterministic
 
 /-!
 # Cobham's function algebra
@@ -23,8 +24,7 @@ The algebra is presented as a syntax `Cobham Symbol n` of terms denoting `n`-ary
 with semantics given by `Cobham.eval`.
 Cobham's side condition on recursion — that the recursively defined
 function be length-bounded by another function of the class — is not part of the syntax:
-it is the structural predicate `Cobham.Limited`,
-and `cobhamFP` collects the unary functions denoted by limited terms.
+it is the structural predicate `Cobham.Limited`.
 
 The functions are multi-arity (indexed by `Fin n` argument vectors) because limited
 recursion on notation inherently produces functions of higher arity.
@@ -36,6 +36,13 @@ recursion on notation inherently produces functions of higher arity.
 - `Cslib.Cobham.eval` — the string function denoted by a term
 - `Cslib.Cobham.Limited` — the side condition that every recursion in a term is bounded
   by its bounding term
+
+## Main statements
+
+- `Cslib.Cobham.exists_limited_iff_polyTimeComputable` — Cobham's characterization of
+  polynomial time: over the binary alphabet, the functions denoted by limited unary terms are
+  exactly the polynomial-time computable functions
+  (`Cslib.Turing.SingleTapeTM.PolyTimeComputable`). Proof wanted.
 
 ## Design notes
 
@@ -172,6 +179,14 @@ def Limited {n : ℕ} : Cobham Symbol n → Prop
       base.Limited ∧ (∀ a, (step a).Limited) ∧ bound.Limited ∧
         ∀ v x, (recNotation base.eval (fun a => (step a).eval) v x).length ≤
           (bound.eval (Fin.cons x v)).length := Iff.rfl
+
+open Turing.SingleTapeTM in
+/-- **Cobham's characterization of polynomial time** [Cobham1965]: a binary string function
+is denoted by a limited unary term if and only if it is computable in polynomial time by a
+single-tape Turing machine. -/
+proof_wanted exists_limited_iff_polyTimeComputable (f : List Bool → List Bool) :
+    (∃ c : Cobham Bool 1, c.Limited ∧ ∀ x, c.eval (fun _ => x) = f x) ↔
+      Nonempty (PolyTimeComputable f)
 
 end Cobham
 
