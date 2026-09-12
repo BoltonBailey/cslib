@@ -36,7 +36,6 @@ recursion on notation inherently produces functions of higher arity.
 - `Cslib.Cobham.eval` — the string function denoted by a term
 - `Cslib.Cobham.Limited` — the side condition that every recursion in a term is bounded
   by its bounding term
-- `Cslib.CobhamFP` — the unary string functions denoted by limited terms
 
 ## Design notes
 

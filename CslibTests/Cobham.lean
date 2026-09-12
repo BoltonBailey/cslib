@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bolton Bailey
 -/
 
-import Cslib.Computability.FunctionAlgebras.Cobham.Defs
+import Cslib.Computability.FunctionAlgebras.Cobham.PolyTime
 import Mathlib.Data.Fin.VecNotation
 
 /-! # Cobham's function algebra tests
